@@ -28,20 +28,15 @@ body {
 .chartBox {
   display: inline-block;
   height: 70vh;
-  width: 95%;
   padding: 20px;
   border-radius: 20px;
   border: solid 3px rgba(54, 162, 235, 1);
   background: white;
 }
-canvas {
-  margin: 0 auto;
-}
 
 table {
   border-collapse: collapse;
-  width: 98%;
-  margin: 0 auto;
+  width: 100%;
 }
 
 table td,
