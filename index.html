@@ -307,6 +307,11 @@
         myChart.config.data.datasets[0].data = res[0];
         myChart.config.options.scales.x.min = res[1].min;
         myChart.config.options.scales.x.max = res[1].max;
+
+        console.log("hey");
+        myChart.config.data.datasets[0].barPercentage =
+          res[0].length > 3 ? 0.6 : 0.2;
+
         myChart.update();
       }
 
