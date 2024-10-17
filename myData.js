@@ -418,7 +418,7 @@ const gantData = {
     },
   },
   4500013028: {
-    flag: "./turkey.jpg",
+    flag: "./french.png",
     gantData: {
       milestones: [
         {
@@ -476,7 +476,7 @@ const gantData = {
     },
   },
   45000126717: {
-    flag: "./morroco.png",
+    flag: "./turkey.jpg",
     gantData: {
       milestones: [
         {
@@ -507,7 +507,7 @@ const gantData = {
     },
   },
   4500013350: {
-    flag: "./china.png",
+    flag: "./morroco.png",
     gantData: {
       milestones: [
         {
@@ -807,6 +807,93 @@ const gantData = {
         {
           name: "Eta date supplier JFC4",
           startingDate: "2025-02-17",
+          endingDate: now,
+          status: "",
+        },
+      ],
+    },
+  },
+
+  4500013478: {
+    flag: "./usa.png",
+    gantData: {
+      milestones: [
+        {
+          name: "PO signature",
+          startingDate: "2024-09-24",
+          endingDate: now,
+          status: "",
+        },
+      ],
+    },
+  },
+  4500013749: {
+    flag: "./netherlands.png",
+    gantData: {
+      milestones: [
+        {
+          name: "PO signature",
+          startingDate: "2024-09-26",
+          endingDate: now,
+          status: "",
+        },
+        {
+          name: "Annexes signature",
+          startingDate: "2024-09-26",
+          endingDate: now,
+          status: "",
+        },
+        {
+          name: "PO CONTRACTUAL DELIVERY DATE JFC1",
+          startingDate: "2025-01-24",
+          endingDate: now,
+          status: "",
+        },
+
+        {
+          name: "PO CONTRACTUAL DELIVERY DATE JFC2",
+          startingDate: "2025-01-24",
+          endingDate: now,
+          status: "",
+        },
+
+        {
+          name: "PO CONTRACTUAL DELIVERY DATE JFC4",
+          startingDate: "2025-01-24",
+          endingDate: now,
+          status: "",
+        },
+      ],
+    },
+  },
+
+  4500013596: {
+    flag: "./french.png",
+    gantData: {
+      milestones: [
+        {
+          name: "PO signature",
+          startingDate: "2024-09-06",
+          endingDate: now,
+          status: "",
+        },
+        {
+          name: "PO CONTRACTUAL DELIVERY DATE JFC1",
+          startingDate: "2024-05-12",
+          endingDate: now,
+          status: "",
+        },
+
+        {
+          name: "PO CONTRACTUAL DELIVERY DATE JFC2",
+          startingDate: "2024-05-12",
+          endingDate: now,
+          status: "",
+        },
+
+        {
+          name: "PO CONTRACTUAL DELIVERY DATE JFC4",
+          startingDate: "2024-05-12",
           endingDate: now,
           status: "",
         },
