@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Dashboard</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!---->
+
+    <div class="header">
+      <div class="supplier"></div>
+      <div class="flag"><img src="" /></div>
+      <div class="productName"></div>
+    </div>
+    <div class="chartCard">
+      <div class="chartBox">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+
+    <div id="tableContainer"></div>
+    <script src="./csv.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"
+    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script type="module">
+      import gantdata from "./myData.js";
+      import otherData from "./otherData.js";
+
+      let keys = Object.keys(gantdata);
+
+      let dataArray = keys.map((k) => {
+        return {
+          id: k,
+          supplier: otherData[k].otherData[0].supplier,
+          productName: otherData[k].otherData[0].productName,
+          flag: gantdata[k].flag,
+        };
+      });
+
+      let res = handleData(dataArray[0]);
+
+      let data = {
+        datasets: [
+          {
+            data: res[0],
+            backgroundColor: [
+              "rgba(255, 26, 104, 0.4)",
+              "rgba(54, 162, 235, 0.4)",
+              "rgba(255, 206, 86, 0.4)",
+              "rgba(75, 192, 192, 0.4)",
+              "rgba(153, 102, 255, 0.4)",
+              "rgba(255, 159, 64, 0.4)",
+              "rgba(255, 99, 132, 0.4)",
+              "rgba(255, 223, 86, 0.4)",
+            ],
+
+            borderColor: [
+              "rgba(255, 26, 104, 0.4)",
+              "rgba(54, 162, 235, 0.4)",
+              "rgba(255, 206, 86, 0.4)",
+              "rgba(75, 192, 192, 0.4)",
+              "rgba(153, 102, 255, 0.4)",
+              "rgba(255, 159, 64, 0.4)",
+              "rgba(255, 99, 132, 0.4)",
+              "rgba(255, 223, 86, 0.4)",
+            ],
+            borderWidth: 1,
+            borderSkipped: false,
+
+            borderRadius: 10,
+            barPercentage: 0.6,
+          },
+        ],
+      };
+
+      const todayLine = {
+        id: "todayLine",
+        afterDatasetsDraw(chart, args, pluginOptions) {
+          const {
+            ctx,
+            data,
+            chartArea: { top, bottom, left, right },
+            scales: { x, y },
+          } = chart;
+
+          ctx.save();
+
+          ctx.beginPath();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "rgba(255, 26, 104, 1)";
+          ctx.setLineDash([6, 6]);
+          ctx.moveTo(x.getPixelForValue(new Date()), top);
+          ctx.lineTo(x.getPixelForValue(new Date()), bottom);
+
+          ctx.stroke();
+          ctx.restore();
+
+          ctx.beginPath();
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(255, 26, 104, 1)";
+          ctx.fillStyle = "rgba(255, 26, 104, 1)";
+          ctx.moveTo(x.getPixelForValue(new Date()), top + 3);
+          ctx.lineTo(x.getPixelForValue(new Date()) - 6, top - 6);
+          ctx.lineTo(x.getPixelForValue(new Date()) + 6, top - 6);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fill();
+
+          ctx.font = "bold 12px sans-serif";
+          ctx.fillStyle = "rgba(255, 26, 104, 1)";
+          ctx.textAlign = "center";
+          ctx.fillText("Today", x.getPixelForValue(new Date()), bottom + 15);
+        },
+      };
+      // config
+      const config = {
+        type: "bar",
+        data,
+        options: {
+          layout: {
+            padding: {
+              left: 100,
+              right: 100,
+              bottom: 20,
+            },
+          },
+          indexAxis: "y",
+
+          scales: {
+            x: {
+              ticks: {
+                color: "#000",
+              },
+              position: "top",
+              type: "time",
+              time: {
+                unit: "day",
+              },
+
+              min: res[1].min,
+              max: res[1].max,
+            },
+
+            y: {
+              ticks: {
+                color: "#000",
+              },
+            },
+          },
+
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                title: (ctx) => {
+                  ctx[0].formattedValue = "";
+                  const startDate = new Date(ctx[0].raw.x[0]);
+                  const endDate = new Date(ctx[0].raw.x[1]);
+
+                  const timeDifference = endDate - startDate;
+
+                  // Convert the difference to days (1 day = 24 * 60 * 60 * 1000 milliseconds)
+                  const dayDifference = Math.ceil(
+                    timeDifference / (1000 * 60 * 60 * 24),
+                  );
+
+                  // Calculate weeks and months
+                  const weekDifference = Math.floor(dayDifference / 7); // 1 week = 7 days
+
+                  // For months, we calculate based on year and month difference
+                  const monthsDifference =
+                    (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+                    (endDate.getMonth() - startDate.getMonth());
+
+                  // Store the number of days, weeks, and months in the formattedValue
+                  ctx[0].formattedValue = `${dayDifference} days, ${weekDifference} weeks, ${monthsDifference} months`;
+
+                  const formattedStartDate = startDate.toLocaleString([], {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour12: true,
+                  });
+
+                  const formattedEndDate = endDate.toLocaleString([], {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour12: true,
+                  });
+                  return `${formattedStartDate} - ${formattedEndDate}`;
+                },
+              },
+            },
+          },
+        },
+        plugins: [todayLine],
+      };
+
+      // render init block
+      const myChart = new Chart(document.getElementById("myChart"), config);
+      function createTable(data) {
+        const existingTable = document.querySelector("table");
+        if (existingTable) existingTable.remove();
+
+        const table = document.createElement("table");
+        table.border = 1;
+
+        const header = document.createElement("tr");
+        Object.keys(data[0]).forEach((key) => {
+          if (key !== "flag") {
+            // Ignore the 'flag' field
+            const th = document.createElement("th");
+            th.textContent = key;
+            header.appendChild(th);
+          }
+        });
+        table.appendChild(header);
+
+        data.forEach((obj) => {
+          const row = document.createElement("tr");
+          Object.entries(obj).forEach(([key, value]) => {
+            if (key !== "flag") {
+              // Ignore the 'flag' field
+              const td = document.createElement("td");
+              td.textContent = value;
+              row.appendChild(td);
+            }
+          });
+          table.appendChild(row);
+
+          row.addEventListener("click", () => handleRowClick(row, obj));
+        });
+
+        document.getElementById("tableContainer").appendChild(table);
+      }
+      // Function to handle row click, highlight, and log data
+      function handleRowClick(row, rowData) {
+        // Remove highlight from any previously selected row
+        const previouslySelected = document.querySelectorAll("tr.selected");
+        previouslySelected.forEach((tr) => tr.classList.remove("selected"));
+
+        // Add highlight class to the clicked row
+        row.classList.add("selected");
+
+        // Log the row data
+
+        update(rowData);
+      }
+
+      function handleData(data) {
+        let supplier = document.querySelector(".supplier");
+        let productName = document.querySelector(".productName");
+        let flagImage = document.querySelector(".flag img");
+
+        flagImage.src = data.flag;
+
+        // Set supplier and product name
+        supplier.innerText = data.supplier;
+        productName.innerText = data.productName;
+
+        // Map over milestones and format start and end dates
+        let milestones = gantdata[data.id].gantData.milestones.map((m) => {
+          const start = new Date(
+            Math.min(new Date(m.startingDate), new Date(m.endingDate)),
+          );
+          const end = new Date(
+            Math.max(new Date(m.startingDate), new Date(m.endingDate)),
+          );
+
+          // Format start and end dates to 'yyyy-mm-dd'
+          const formatDate = (date) => {
+            return date.toISOString().split("T")[0];
+          };
+
+          return {
+            x: [formatDate(start), formatDate(end)], // Use the format function
+            y: m.name, // Milestone name
+          };
+        });
+
+        // Find min and max dates
+        let { min, max } = findMinMaxDate(milestones);
+
+        return [milestones, { min, max }];
+      }
+      function update(data) {
+        let res = handleData(data);
+
+        myChart.config.data.datasets[0].data = res[0];
+        myChart.config.options.scales.x.min = res[1].min;
+        myChart.config.options.scales.x.max = res[1].max;
+        myChart.update();
+      }
+
+      function findMinMaxDate(data) {
+        let minDate = null;
+        let maxDate = null;
+
+        data.forEach((obj) => {
+          obj.x.forEach((dateStr) => {
+            // Check if dateStr is not empty
+            if (dateStr) {
+              if (!minDate || dateStr < minDate) {
+                minDate = dateStr; // Update minDate if it's null or current date is smaller
+              }
+
+              if (!maxDate || dateStr > maxDate) {
+                maxDate = dateStr; // Update maxDate if it's null or current date is larger
+              }
+            }
+          });
+        });
+
+        return {
+          min: minDate,
+          max: maxDate,
+        };
+      }
+      createTable(dataArray);
+    </script>
+  </body>
+</html>

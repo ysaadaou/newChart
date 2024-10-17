@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  /* background-color: yellow; */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+/* .chartMenu { */
+/*   width: 100vw; */
+/*   height: 40px; */
+/*   background: #1a1a1a; */
+/*   color: rgba(54, 162, 235, 1); */
+/* } */
+/* .chartMenu p { */
+/*   padding: 10px; */
+/*   font-size: 20px; */
+/* } */
+.chartCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chartBox {
+  display: inline-block;
+  height: 70vh;
+  width: 70%;
+  padding: 20px;
+  border-radius: 20px;
+  border: solid 3px rgba(54, 162, 235, 1);
+  background: white;
+}
+canvas {
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table td,
+table th {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+/* table tr:nth-child(2n) { */
+/*   background-color: #f2f2f2; */
+/* } */
+
+/* table tr:hover { */
+/*   background-color: #ddd; */
+/* } */
+
+table th {
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+  text-align: left;
+
+  background-color: dodgerblue;
+
+  color: white;
+}
+
+.header {
+  background-color: dodgerblue;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.supplier,
+.productName {
+  width: 50%;
+  padding: 1rem;
+  background-color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+.selected {
+  background-color: yellow; /* Light blue background */
+}
+
+.header img {
+  max-height: 100px;
+  display: inline-block;
+}
