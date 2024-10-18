@@ -11,17 +11,17 @@
     <!---->
 
     <header>
-      <img src="./ocpLogo.jpeg" alt="" />
-      <h1>TSP Adaptation JFC1, 2 &4</h1>
-      <img src="./jesaLogo.jpeg" alt="" />
+      <div class="top">
+        <img src="./ocpLogo.jpeg" alt="" />
+        <h1>TSP Adaptation JFC1, 2 &4</h1>
+        <img src="./jesaLogo.jpeg" alt="" />
+      </div>
+
+      <div class="header">
+        <div class="flag"><img src="" /></div>
+        <h2 class="supplier"></h2>
+      </div>
     </header>
-
-    <div class="header">
-      <div class="supplier"></div>
-
-      <div class="flag"><img src="" /></div>
-      <div class="productName"></div>
-    </div>
 
     <div class="chartCard">
       <div class="chartBox">
@@ -104,8 +104,9 @@
           ctx.lineWidth = 3;
           ctx.strokeStyle = "rgba(255, 26, 104, 1)";
           ctx.setLineDash([6, 6]);
-          ctx.moveTo(x.getPixelForValue(new Date()), top);
-          ctx.lineTo(x.getPixelForValue(new Date()), bottom);
+          const today = new Date(new Date().setHours(0, 0, 0, 0)); // Set time to midnight
+          ctx.moveTo(x.getPixelForValue(today), top);
+          ctx.lineTo(x.getPixelForValue(today), bottom);
 
           ctx.stroke();
           ctx.restore();
@@ -114,9 +115,9 @@
           ctx.lineWidth = 1;
           ctx.strokeStyle = "rgba(255, 26, 104, 1)";
           ctx.fillStyle = "rgba(255, 26, 104, 1)";
-          ctx.moveTo(x.getPixelForValue(new Date()), top + 3);
-          ctx.lineTo(x.getPixelForValue(new Date()) - 6, top - 6);
-          ctx.lineTo(x.getPixelForValue(new Date()) + 6, top - 6);
+          ctx.moveTo(x.getPixelForValue(today), top + 3);
+          ctx.lineTo(x.getPixelForValue(today) - 6, top - 6);
+          ctx.lineTo(x.getPixelForValue(today) + 6, top - 6);
           ctx.closePath();
           ctx.stroke();
           ctx.fill();
@@ -124,7 +125,7 @@
           ctx.font = "bold 12px sans-serif";
           ctx.fillStyle = "rgba(255, 26, 104, 1)";
           ctx.textAlign = "center";
-          ctx.fillText("Today", x.getPixelForValue(new Date()), bottom + 15);
+          ctx.fillText("Today", x.getPixelForValue(today), bottom + 15);
         },
       };
       // config
@@ -267,14 +268,13 @@
 
       function handleData(data) {
         let supplier = document.querySelector(".supplier");
-        let productName = document.querySelector(".productName");
+        // let productName = document.querySelector(".productName");
         let flagImage = document.querySelector(".flag img");
 
         flagImage.src = data.flag;
 
         // Set supplier and product name
-        supplier.innerText = data.supplier;
-        productName.innerText = data.productName;
+        supplier.innerText = `${data.supplier} : ${data.productName}`;
 
         // Map over milestones and format start and end dates
         let milestones = gantdata[data.id].gantData.milestones.map((m) => {
@@ -313,7 +313,6 @@
 
         myChart.update();
       }
-
       function findMinMaxDate(data) {
         let minDate = null;
         let maxDate = null;
@@ -322,22 +321,55 @@
           obj.x.forEach((dateStr) => {
             // Check if dateStr is not empty
             if (dateStr) {
+              // Update minDate if it's null or current date is smaller
               if (!minDate || dateStr < minDate) {
-                minDate = dateStr; // Update minDate if it's null or current date is smaller
+                minDate = dateStr;
               }
 
+              // Update maxDate if it's null or current date is larger
               if (!maxDate || dateStr > maxDate) {
-                maxDate = dateStr; // Update maxDate if it's null or current date is larger
+                maxDate = dateStr;
               }
             }
           });
         });
+
+        // Add 7 days to the maxDate
+        if (maxDate) {
+          let maxDateObj = new Date(maxDate); // Convert to Date object
+          maxDateObj.setDate(maxDateObj.getDate() + 1); // Add 7 days
+          maxDate = maxDateObj.toISOString().split("T")[0]; // Format back to "YYYY-MM-DD"
+        }
 
         return {
           min: minDate,
           max: maxDate,
         };
       }
+      // function findMinMaxDate(data) {
+      //   let minDate = null;
+      //   let maxDate = null;
+      //
+      //   data.forEach((obj) => {
+      //     obj.x.forEach((dateStr) => {
+      //       // Check if dateStr is not empty
+      //       if (dateStr) {
+      //         if (!minDate || dateStr < minDate) {
+      //           minDate = dateStr; // Update minDate if it's null or current date is smaller
+      //         }
+      //
+      //         if (!maxDate || dateStr > maxDate) {
+      //           maxDate = dateStr; // Update maxDate if it's null or current date is larger
+      //         }
+      //       }
+      //     });
+      //   });
+      //
+      //   return {
+      //     min: minDate,
+      //     max: maxDate,
+      //   };
+      // }
       createTable(dataArray);
     </script>
   </body>

@@ -66,30 +66,29 @@ table th {
   color: white;
 }
 
-header {
-  background-color: dodgerblue;
-  color: white;
-  padding: 1rem;
+.top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
 }
 
+header {
+  background-color: dodgerblue;
+  color: white;
+  padding: 0.5rem;
+}
+
 .header {
+  width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
   justify-content: center;
 }
 
-.title {
-  display: flex;
-}
-
-.supplier,
-.productName {
-  width: 50%;
-  padding: 1rem;
+.supplier {
   text-align: center;
   font-weight: bold;
   font-size: 1.4rem;
@@ -105,6 +104,6 @@ img {
   display: inline-block;
 }
 
-header img {
+.top img {
   border-radius: 24px;
 }
